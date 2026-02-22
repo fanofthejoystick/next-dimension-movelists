@@ -1,0 +1,589 @@
+/* Full-page scrolling background */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Eurostile', 'Arial', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+
+  /* Background */
+  background-image: url('images/bgscroll.png');
+  background-repeat: no-repeat;
+  background-position: top center; /* start at top */
+  background-size: auto; /* fill width */
+  background-attachment: scroll;
+}
+
+/* Optional overlay for readability */
+body::before {
+  content: "";
+  position: fixed;  /* stays in place for overlay effect */
+  inset: 0;
+  background: rgba(0,0,0,0.20);   /* semi-transparent dark overlay */
+  z-index: -1;
+}
+
+h1 {
+	margin-bottom: 30px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.movelist {
+	font-size: 24px;
+}
+
+.move {
+	margin-bottom: 12px;
+}
+
+.icon {
+	width: 45px;
+	height: 45px;
+	vertical-align: middle;
+	margin-right: 2px;
+  margin-left: 2px;
+}
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.character-card {
+  display: block;
+  padding: 15px;
+  background: #222;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.character-card:hover {
+  background: #444;
+}
+
+/* Movelist panel scales with screen width */
+.movelist-panel {
+  width: 90%;                     /* scales with screen width */
+  max-width: 1200px;              /* never too wide */
+  min-width: 700px;                /* don't shrink too much */
+  margin: 40px auto;
+  padding: 20px;                   /* more space inside panel */
+  border: 2px solid #555;
+  border-radius: 8px;
+  background-color: #111111a8;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+  font-family: 'Eurostile', 'Arial', sans-serif;
+  color: #fff;
+}
+
+
+/* ===== Table Basics ===== */
+#movelist-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: clamp(14px, 1.2vw, 20px);
+  background-color: transparent;    /* panel background comes from wrapper */
+}
+
+/* ===== Header Styling ===== */
+#movelist-table thead th {
+  text-align: left;
+  font-weight: bold;
+  padding: 8px 6px;
+  border-bottom: 2px solid #666;
+  background-color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== Row Styling ===== */
+#movelist-table tbody tr {
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+}
+
+#movelist-table tbody tr:hover {
+  background-color: rgba(255,255,255,0.08);  /* subtle glow */
+}
+
+/* ===== Cell Styling ===== */
+#movelist-table td {
+  padding: clamp(6px, 0.8vw, 12px) clamp(4px, 0.8vw, 10px);
+  vertical-align: middle;
+}
+
+/* Command column with indentation */
+#movelist-table td.command {
+  white-space: nowrap;               /* keep icons + command on one line */
+}
+
+/* ===== Tag Styling ===== */
+.tag {
+  display: inline-block;
+  margin-right: 4px;
+  border-radius: 4px;
+  font-size: clamp(14px, 1vw, 20px);
+  padding: 3px 8px;
+  font-weight: bold;
+  background-color: #444;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Optional: color-coded tags */
+.tag.stun { background-color: #c0392b; }
+.tag.crumple { background-color: #8e44ad; }
+.tag.unblockable { background-color: #2980b9; }
+.tag.airseek { background-color: #f39c12; }
+.tag.stance { background-color: #f39c12; }
+
+.air-tag {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  font-size: 0.7em;
+  font-weight: bold;
+  padding: 2px 4px;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+
+/* Portrait container floating on bottom-right */
+#character-portrait-container {
+  position: fixed;       /* stays in place as you scroll */
+  bottom: 20px;
+  right: 20px;
+  width: clamp(200px, 15vw, 350px);
+  height: auto;          /* auto height to keep aspect ratio */
+  pointer-events: none;  /* clicks pass through */
+  z-index: 100;          /* above background but below panel */
+}
+
+#character-portrait-container img {
+  width: 100%;           /* fill the container width */
+  height: auto;          /* maintain aspect ratio */
+}
+
+/* Back button top-left */
+#back-button {
+  position: fixed;      /* always at top-left */
+  top: 20px;
+  left: 20px;
+  padding: 8px 14px;
+  background-color: rgba(0,0,0,0.7);
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: 2px solid #555;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 200;         /* above everything else */
+  transition: background 0.2s, transform 0.2s;
+}
+
+/* Hover effect */
+#back-button:hover {
+  background-color: rgba(50,50,50,0.9);
+  transform: scale(1.05);
+}
+
+.category-row .category-header {
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: center;
+  background-color: rgba(255,255,255,0.1);
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  padding: 4px 0;
+}
+
+.command {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.icon.df, .icon.uf, .icon.db, .icon.f, .icon.b, .icon.u, .icon.d {;
+  margin-left: -2px;
+}
+
+/* Wrapper ensures tabs align with the panel */
+.movelist-wrapper {
+  width: 90%;                     /* match your panel width */
+  max-width: 1200px;
+  min-width: 700px;
+  margin: 0px auto;              /* center on page */
+}
+
+/* Tabs row: left-aligned relative to wrapper */
+.tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;    /* left edge of panel */
+  margin-bottom: 0;               /* remove any space below tabs */
+  position: relative;
+}
+
+/* Tab buttons */
+.tab-button {
+  padding: 6px 14px;
+  background: #222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px 4px 0 0;  /* rounded top corners only */
+  line-height: 1;
+}
+
+/* Movelist panel remains unchanged */
+.movelist-panel {
+  width: 100%;            /* full width of wrapper */
+  padding: 20px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  background-color: #111111a8;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+  color: #fff;
+  font-family: 'Eurostile', 'Arial', sans-serif;
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Wrapper centers everything */
+.movelist-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  min-width: 700px;
+  margin: 0 auto; /* remove top/bottom spacing */
+}
+
+/* Tabs flush with panel border */
+.tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-bottom: 0;  /* no space below tabs */
+}
+
+/* Panel flush under tabs */
+.movelist-panel {
+  width: 100%;
+  margin: 0;
+  padding: 20px;
+  border: 2px solid #555;
+  border-radius: 0px 0px 8px 8px;
+  background-color: #111111a8;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+}
+
+/* Optional: move active tab slightly down to overlap panel border */
+.tab-button.active {
+  background: #555;
+  border-bottom: 2px solid #111;
+  position: relative;
+}
+
+/* Tabs row */
+.tabs {
+  display: flex;
+  gap: 12px;                 /* spacing between tabs */
+  justify-content: flex-start; /* align to left of panel */
+  margin-bottom: 0;          /* flush with panel */
+}
+
+/* Tab buttons: dark, rounded folder style */
+.tab-button {
+  padding: 10px 20px;          /* larger clickable area */
+  font-size: 18px;             /* bigger text */
+  font-weight: bold;
+  background-color: #222;       /* same as your previous tabs */
+  color: #fff;                  /* text color */
+  border: 2px solid #555;       /* match movelist panel border color */
+  border-bottom: none;          /* visually merges with panel when active */
+  border-radius: 10px 10px 0 0; /* rounded top corners */
+  cursor: pointer;
+  line-height: 1;
+  position: relative;           /* needed for overlap effect */
+  top: 0;
+  transition: top 0.1s, background-color 0.2s;
+}
+
+/* Active tab: slightly “on top” the panel */
+.tab-button.active {
+  background-color: #555;       /* match previous active style */
+  z-index: 10;                  /* above panel */
+  border-bottom: none; /* visually merges with panel top */
+}
+
+/* Optional: hover effect for inactive tabs */
+.tab-button:not(.active):hover {
+  background-color: #333;
+}
+
+/* ===== Combos Tab Styling ===== */
+
+/* Make combos table match moves table styling */
+#combos table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: clamp(14px, 1.2vw, 20px);
+  background-color: transparent;
+}
+
+/* Combos table header */
+#combos thead th {
+  text-align: left;
+  font-weight: bold;
+  padding: 8px 6px;
+  border-bottom: 2px solid #666;
+  background-color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Combos table rows */
+#combos tbody tr {
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+}
+
+#combos tbody tr:hover {
+  background-color: rgba(255,255,255,0.08);
+}
+
+/* Combos table cells */
+#combos td {
+  padding: clamp(6px, 0.8vw, 12px) clamp(4px, 0.8vw, 10px);
+  vertical-align: middle;
+}
+
+/* Command column indentation */
+#combos td.command {
+  white-space: nowrap;
+  font-size: 30px;
+  line-height: 1;
+}
+
+/* Category headers inside combos */
+#combos .category-row .category-header {
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: center;
+  background-color: rgba(255,255,255,0.1);
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  padding: 4px 0;
+}
+
+/* Tags inside combos */
+#combos .tag {
+  display: inline-block;
+  margin-right: 4px;
+  border-radius: 4px;
+  font-size: clamp(14px, 1vw, 20px);
+  padding: 3px 8px;
+  font-weight: bold;
+  background-color: #444;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+#combos .air-tag {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  font-size: 0.7em;
+  font-weight: bold;
+  padding: 2px 4px;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+
+/* ===== Combos Table Header ===== */
+#combos table thead th {
+  text-align: left;
+  font-weight: bold;
+  padding: 8px 6px;
+  border-bottom: 2px solid #666;
+  background-color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== Apply same styling to combos table ===== */
+#combos-table,
+#combos-table thead th,
+#combos-table tbody tr,
+#combos-table td {
+  /* Inherit styles from movelist table */
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: clamp(14px, 1.2vw, 20px);
+  background-color: transparent;
+}
+
+#combos-table thead th {
+  text-align: left;
+  font-weight: bold;
+  padding: 8px 6px;
+  border-bottom: 2px solid #666;
+  background-color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#combos-table tbody tr {
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+}
+
+#combos-table tbody tr:hover {
+  background-color: rgba(255,255,255,0.08);
+}
+
+#combos-table td {
+  padding: clamp(6px, 0.8vw, 12px) clamp(4px, 0.8vw, 10px);
+  vertical-align: middle;
+}
+
+#combos-table td.command {
+  white-space: nowrap;
+}
+
+.icon.airseek, .icon.cancel {
+  width: 45px;
+  height: 45px;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+/* Shaded cancel children */
+tr.cancel-child td {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Tag styles */
+.tag.cancel {
+  cursor: pointer;
+}
+
+/* Collapse indicator arrow */
+.collapse-indicator {
+  font-size: 0.85em;
+  opacity: 0.8;
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+/* Rotate arrow when expanded */
+.collapse-indicator.expanded {
+  transform: rotate(90deg);
+}
+
+/* Collapsible content div inside td */
+td > .collapsible {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Expanded state */
+td > .collapsible.expanded {
+  max-height: 500px; /* adjust if your row content is taller */
+  opacity: 1;
+}
+
+/* Note tag styling */
+.tag.note {
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #3e3e3e;
+  border-radius: 3px;
+  padding: 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Tooltip */
+.tag.note::before {
+  content: attr(data-note);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 125%;                /* above the tag */
+  background-color: #2d3436;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 0.75em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease; /* fast fade */
+  z-index: 100;
+}
+
+/* show tooltip on hover */
+.tag.note:hover::before {
+  opacity: 1;
+}
+
+/* Note tag styling */
+.tag.note {
+  border-radius: 3px;
+  padding: 2px 5px;
+  align-items: center;
+  gap: 4px; /* space between text and ? */
+}
+
+/* Add the "?" on the right */
+.tag.note::after {
+  content: "?";
+  pointer-events: none;
+}
+
+/* Tooltip */
+.tag.note::before {
+  content: attr(data-note);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 125%;
+  background-color: #2d3436;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 100;
+}
+
+.tag.note:hover::before {
+  opacity: 1;
+}

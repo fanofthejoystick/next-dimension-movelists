@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movelist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="index.html" id="back-button">← Back</a>
+  <h1 id="character-name">Character</h1>
+
+  <div class="movelist-wrapper">
+    <!-- Tabs above panel -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="moves-tab">Moves</button>
+      <button class="tab-button" data-tab="combos-tab">Combos</button>
+    </div>
+
+    <!-- Movelist panel -->
+    <div class="movelist-panel">
+      <!-- Moves Tab Content -->
+      <div class="tab-content active" id="moves-tab">
+        <table id="movelist-table">
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Damage</th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody id="movelist-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Combos Tab Content -->
+      <div class="tab-content" id="combos-tab">
+        <table id="combos-table">
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Damage</th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody id="combos-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="character-portrait-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/characters.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Character Select</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Select Character</h1>
+
+  <div class="character-grid"></div>
+
+  <script src="js/characters.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const grid = document.querySelector(".character-grid");
+
+  Object.keys(characters).forEach(key => {
+    const character = characters[key];
+
+    const link = document.createElement("a");
+    link.href = `movelist.html?char=${key}`;
+    link.className = "character-card";
+
+    // Portrait image
+    const img = document.createElement("img");
+    img.src = character.icon;
+    img.alt = character.name;
+    img.className = "character-icon";
+
+    // Name
+    const name = document.createElement("div");
+    name.textContent = character.name;
+
+    link.appendChild(img);
+    link.appendChild(name);
+
+    grid.appendChild(link);
+  });
+});
+
+  </script>
+
+</body>
+</html>
