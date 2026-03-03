@@ -9,8 +9,13 @@ function getIndentLevel(command, previousMoves, category) {
     if (!prev.command) continue;
     if (prev.category !== category) continue;
 
-    const isCancel = prev.tags?.some(t => t.toLowerCase() === "cancel");
-    if (isCancel) continue;
+    // Ignore child-type moves (cancel OR chained)
+    const isChild = prev.tags?.some(t => {
+      const lower = t.toLowerCase();
+      return lower === "cancel" || lower === "chained";
+    });
+
+    if (isChild) continue;
 
     const prevClean = prev.command.replace(/\s+/g, "").toUpperCase();
 
@@ -21,7 +26,8 @@ function getIndentLevel(command, previousMoves, category) {
       if (!bestMatch || prevClean.length > bestMatch.clean.length) {
         bestMatch = {
           clean: prevClean,
-          indent: prev._indentLevel || 0
+          indent: prevClean.length,
+          level: prev._indentLevel || 0
         };
       }
     }
@@ -29,7 +35,7 @@ function getIndentLevel(command, previousMoves, category) {
 
   if (!bestMatch) return 0;
 
-  return bestMatch.indent + 1;
+  return bestMatch.level + 1;
 }
 
 function countSegments(command) {
@@ -140,38 +146,6 @@ function replaceNotation(text) {
   return replaced;
 }
 
-function buildTreeNode() {
-  return `<span class="tree-node"></span>`;
-}
-
-function buildTreeVisual(move, allMoves) {
-  const level = move._indentLevel;
-  if (level === 0) return "";
-
-  let html = "";
-
-  for (let i = 0; i < level; i++) {
-    const isLastAtLevel = isLastSibling(move, allMoves, i);
-    html += `<span class="tree-line ${isLastAtLevel ? "last" : ""}"></span>`;
-  }
-
-  html += `<span class="tree-branch-node"></span>`;
-
-  return html;
-}
-
-function isLastSibling(move, allMoves, level) {
-  const index = allMoves.indexOf(move);
-  for (let i = index + 1; i < allMoves.length; i++) {
-    const next = allMoves[i];
-    if (!next._indentLevel && next._indentLevel !== 0) continue;
-
-    if (next._indentLevel < move._indentLevel) break;
-    if (next._indentLevel === move._indentLevel) return false;
-  }
-  return true;
-}
-
 function renderMovelist(character) {
   const tableBody = document.getElementById("movelist-body");
   if (!tableBody) return;
@@ -189,7 +163,7 @@ function renderMovelist(character) {
   const basePadding = 16;
   const indentPerLevel = 30;
 
-  let activeCancellable = null;
+  let activeParent = null;
 
   moves.forEach(move => {
     if (move.category && !move.command) {
@@ -202,13 +176,20 @@ function renderMovelist(character) {
 
     if (!move.command) return;
 
-    const isParent = move.tags.some(t => t.toLowerCase() === "cancellable");
-    const isCancelChild = move.tags.some(t => t.toLowerCase() === "cancel");
+    const tagsLower = (move.tags || []).map(t => t.toLowerCase());
+
+    const isParent =
+      tagsLower.includes("cancellable") ||
+      tagsLower.includes("chain");
+
+    const isChild =
+      tagsLower.includes("cancel") ||
+      tagsLower.includes("chained");
 
     let indentLevel;
 
     // ------------------
-    // CANCELLABLE PARENT
+    // PARENT
     // ------------------
     if (isParent) {
       indentLevel = getIndentLevel(move.command, previousMoves, move.category);
@@ -217,27 +198,25 @@ function renderMovelist(character) {
       move.parentId = parentCounter;
       childrenMap.set(parentCounter, []);
 
-      activeCancellable = move;
+      activeParent = move;
     }
 
-    // -------------
-    // CANCEL CHILD
-    // -------------
-    else if (isCancelChild && activeCancellable) {
-      const parentIndent = activeCancellable._indentLevel ?? 0;
+    // ------------------
+    // CHILD
+    // ------------------
+    else if (isChild && activeParent) {
+      indentLevel = (activeParent._indentLevel ?? 0) + 1;
 
-      indentLevel = parentIndent + 1;
-
-      move.parentId = activeCancellable.parentId;
-      childrenMap.get(activeCancellable.parentId).push(move);
+      move.parentId = activeParent.parentId;
+      childrenMap.get(activeParent.parentId).push(move);
     }
 
-    // ------------
+    // ------------------
     // NORMAL MOVE
-    // ------------
+    // ------------------
     else {
       indentLevel = getIndentLevel(move.command, previousMoves, move.category);
-      activeCancellable = null;
+      activeParent = null;
       move.parentId = 0;
     }
 
@@ -257,7 +236,7 @@ function renderMovelist(character) {
 
     if (isParent) row.dataset.parent = "true";
 
-    if (isCancelChild) {
+    if (isChild) {
       row.dataset.child = "true";
       row.style.display = "none";
       row.classList.add("cancel-child");
@@ -265,7 +244,7 @@ function renderMovelist(character) {
 
     row.dataset.parentId = move.parentId || 0;
 
-    const tagsHtml = move.tags.map(t => {
+    const tagsHtml = (move.tags || []).map(t => {
       const lower = t.toLowerCase();
 
       if (lower.startsWith("note:")) {
@@ -273,6 +252,7 @@ function renderMovelist(character) {
         return `<span class="tag note" data-note="${noteText}">Note</span>`;
       }
 
+      // Hide only structural child tags
       if (lower === "cancel") return "";
       if (lower === "chained") return "";
 
@@ -283,33 +263,20 @@ function renderMovelist(character) {
       ? `<span class="collapse-indicator">▶</span>`
       : "";
 
-   // inside renderMovelist, replace row.innerHTML td portion with:
-row.innerHTML = `
-  <td style="padding-left:${totalPadding}px" class="command-cell">
-    <span class="bullet"></span>
-    ${hasAirPrefix ? `<span class="air-tag">AIR</span>` : ""}
-    ${replaceNotation(displayCommand)}
-  </td>
-  <td>${move.damage || ""}</td>
-  <td>
-    ${tagsHtml}
-    ${indicatorHtml}
-  </td>
-`;
+    row.innerHTML = `
+      <td style="padding-left:${totalPadding}px" class="command-cell">
+        <span class="bullet"></span>
+        ${hasAirPrefix ? `<span class="air-tag">AIR</span>` : ""}
+        ${replaceNotation(displayCommand)}
+      </td>
+      <td>${move.damage || ""}</td>
+      <td>
+        ${tagsHtml}
+        ${indicatorHtml}
+      </td>
+    `;
 
     tableBody.appendChild(row);
-
-    // ---- Set bullet line length ----
-    const parentIndent = move.parentId
-      ? previousMoves.find(m => m.parentId === move.parentId)?._indentLevel || 0
-      : 0;
-
-    const lineLength = (move._indentLevel - parentIndent) * indentPerLevel;
-
-    const bulletEl = row.querySelector('.bullet');
-    if (bulletEl) {
-      bulletEl.style.setProperty('--line-length', `${lineLength}px`);
-    }
 
     // ------------------
     // COLLAPSE TOGGLE
@@ -325,6 +292,7 @@ row.innerHTML = `
         if (!children) return;
 
         if (collapsed) {
+          // EXPAND
           let insertAfter = row;
 
           children.forEach(childMove => {
@@ -336,19 +304,27 @@ row.innerHTML = `
             const childPadding =
               basePadding + childMove._indentLevel * indentPerLevel;
 
+            const childTagsHtml = (childMove.tags || []).map(t => {
+              const lower = t.toLowerCase();
+              if (lower === "cancel") return "";
+              if (lower === "chained") return "";
+              return `<span class="tag">${t}</span>`;
+            }).join(" ");
+
             childRow.innerHTML = `
-              <td style="padding-left:${childPadding}px; position: relative;">
-                <span class="tree-connector" style="left:${childMove._indentLevel * indentPerLevel - 12}px"></span>
+              <td style="padding-left:${childPadding}px">
                 ${replaceNotation(childMove.command)}
               </td>
               <td>${childMove.damage || ""}</td>
-              <td></td>
+              <td>${childTagsHtml}</td>
             `;
 
             tableBody.insertBefore(childRow, insertAfter.nextSibling);
             insertAfter = childRow;
           });
+
         } else {
+          // COLLAPSE
           const toRemove = tableBody.querySelectorAll(
             `tr[data-child][data-parent-id="${move.parentId}"]`
           );
