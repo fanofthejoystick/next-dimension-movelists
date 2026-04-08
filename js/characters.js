@@ -994,9 +994,81 @@ AIR db2 - 2800 [air]
   havok: {
     name: "Havok",
     icon: "images/havokmini.png",
-    moves: [
-      { command: "", damage: "", tags: [] }
-    ]
+    moves: `
+      ::NORMALS::
+1 - 1300 []
+11 - 2490 []
+112 - 4030 [popup]
+1122 - 5470 [airseek]
+113 - 3400 []
+1133 - 4030 [stun]
+12 - 2560 []
+122 - 3720 [stun]
+1221 - 5820 []
+1223 - 4560 []
+12234 - 5460 []
+1224 - 5150 []
+12f2 - 3680 []
+12f22 - 4730 [airseek]
+12f24 - 4660 []
+13 - 2470 []
+133 - 3310 [stun]
+14 - 2920 []
+144 - 4840 []
+f1 - 1300 []
+f11 - 2425 []
+f112 - 3465 []
+f1122 - 4865 [popup]
+b1 - 1500 []
+b11 - 2690 []
+b112 - 4230 [popup]
+b1122 - 5670 [airseek]
+b113 - 3600 []
+b1133 - 4230 [stun]
+b12 - 2850 [stun]
+b13 - 2580 []
+b134 - 3780 []
+
+2 - 1400 []
+22 - 2705 [stun]
+221 - 5105 []
+223 - 3665 []
+2234 - 4715 []
+224 - 4355 []
+f2 - 1400 []
+f22 - 2750 [popup]
+f24 - 2660 []
+b2 - 1805 [stun]
+b22 - 3405 [popup]
+bb2 - 2200 [popup]
+bb22 - 4360 [airseek]
+wr2 - 1500 [stun]
+
+3 - 1300 []
+33 - 2245 [stun]
+f3 - 1400 []
+f33 - 2975 []
+b3 - 1300 []
+b31 - 2650 []
+b312 - 3850 [stun]
+b32 - 2560 []
+b322 - 4360 []
+b33 - 2470 []
+b333 - 3830 [stun]
+b334 - 4045 [stun]
+ff3 - 1300 []
+ff31 - 2650 []
+ff312 - 3850 [stun]
+ff33 - 2470 []
+ff334 - 3350 []
+
+4 - 1800 []
+44 - 3960 []
+f4 - 1450 []
+f44 - 2980 []
+b4 - 1400 []
+ff4 - 2700 [airseek]
+      `
   },
 
   juggernaut: {
@@ -1508,9 +1580,54 @@ b4 - 1700 []`
   psylocke: {
     name: "Psylocke",
     icon: "images/psylockemini.png",
-    moves: [
-      { command: "", damage: "", tags: [] }
-    ]
+    moves: `
+      ::NORMALS::
+1 - 1200 []
+12 - 2550 [stun]
+124 - 3670 []
+1243 - 4790 []
+13 - 2280 []
+133 - 3400 []
+1333 - 4520 []
+134 - 3630 [popup]
+14 - 2640 []
+14f2 - 3840 []
+14f4 - 3990 [popup]
+1f2 - 2550 []
+1f4 - 2730 [popup]
+f1 - 1300 []
+f12 - 2380 []
+f124 - 3500 []
+f1244 - 4605 []
+f12443 - 5855 [side switch]
+
+2 - 1500 [stun]
+24 - 2760 []
+243 - 4040 []
+f2 - 1500 []
+b2 - 1500 []
+b22 - 2850 [stun]
+b224 - 3970 [popup]
+b2244 - 5160 []
+
+3 - 1200 []
+33 - 2460 []
+333 - 3740 []
+34 - 2730 [popup]
+3b4 - 2640 []
+3b4f2 - 3840 []
+3b4f4 - 3990 [popup]
+
+4 - 1600 []
+4f2 - 2950 []
+4f4 - 3130 [popup]
+f4 - 1710 [popup]
+ff4 - 1400 []
+ff43 - 2660 []
+ff431 - 3780 [stun]
+ff4312 - 4900 []
+wr4 - 1900 [airseek]
+      `
   },
 
   pyro: {
@@ -1524,35 +1641,128 @@ b4 - 1700 []`
   rogue: {
     name: "Rogue",
     icon: "images/roguemini.png",
-    moves: [
-      { command: "df 1", damage: "", tags: [] },
-      { command: "d+f 2", damage: "", tags: [] },
-      { command: "ff 3", damage: "", tags: [] }
-    ]
+    moves: `
+
+      `
   },
 
   sabretooth: {
     name: "Sabretooth",
     icon: "images/sabretoothmini.png",
-    moves: [
-      { command: "", damage: "", tags: [] }
-    ]
+    moves: `
+      
+      `
   },
 
   sentinela: {
     name: "Sentinel A",
     icon: "images/sentinelamini.png",
-    moves: [
-      { command: "", damage: "", tags: [] }
-    ]
+    moves: `
+      ::NORMALS::
+1 - 1450 []
+11 - 2845 []
+111 - 4245 [stun, turn]
+112 - 4405 []
+11f2 - 4005 []
+11f22 - 5440 []
+114 - 4245 [stun]
+1144 - 5400 []
+12 - 3025 []
+13 - 2755 [stun]
+133 - 4235 []
+14 - 3025 [stun]
+144 - 4345 []
+f1 - 1850 [popup]
+b1 - 1650 []
+b11 - 3045 []
+b111 - 4445 [stun, turn]
+b11f2 - 4205 []
+b11f22 - 5640 []
+b12 - 3405 []
+
+2 - 1650 [stun]
+22 - 3765 [popup]
+f2 - 4925 []
+f22 - 3295 []
+b2 - 1650 []
+
+3 - 1450 [stun]
+33 - 3115 []
+f3 - 1650 []
+
+4 - 1750 [stun]
+44 - 3235 []
+f4 - 1650 []
+f41 - 2955 []
+f411 - 4435 []
+f42 - 3405 []
+b4 - 2050 [popup]
+b4f2 - 3355 []
+b4f22 - 4995 []
+      `
   },
 
   sentinelb: {
     name: "Sentinel B",
     icon: "images/sentinelbmini.png",
-    moves: [
-      { command: "", damage: "", tags: [] }
-    ]
+    moves: `
+      1 - 1200 []
+11 - 2550 []
+11b1 - 3990 []
+114 - 3830 []
+1144 - 4950 []
+12 - 2370 []
+121 - 3810 []
+122 - 3490 [airseek]
+124 - 3650 []
+1241 - 4770 []
+12411 - 4770 [Note: Last hit is a projectile that doesn't connect.]
+1243 - 4770 []
+1243f2 - 5610 []
+1244 - 4630 [crumple]
+b1 - 1600 []
+b11 - 1600 [Not a true combo]
+b12 - 2860 [airseek]
+
+2 - 1300 []
+21 - 2920 []
+22 - 2560 [airseek]
+24 - 2740 []
+241 - 4020 []
+2411 - 4020 [Note: Last hit is a projectile that doesn't connect.]
+243 - 4020 []
+243f2 - 5000 []
+244 - 3860 [crumple]
+f2 - 1400 []
+f22 - 2660 []
+f221 - 3780 []
+f2211 - 4760 []
+f221b1 - 5040 []
+f223 - 4020 []
+b2 - 1400 []
+b22 - 2660 [stun]
+b222 - 4100 []
+b24 - 3100 [stun]
+b244 - 4530 [airseek]
+ff2 - 2000 [stun]
+
+3 - 1400 []
+33 - 3020 []
+f3 - 1700 []
+b3 - [projectile shield]
+b3f2 - 1400 []
+
+4 - 1600 []
+41 - 3040 []
+411 - 3040 [Note: Last hit is a projectile that doesn't connect.]
+43 - 3040 []
+43f2 - 4160 []
+44 - 2860 [crumple]
+f4 - 1600 []
+f44 - 3040 []
+ff4 - 1990 [stun]
+ff44 - 3550 [airseek]
+      `
   },
 
   storm: {
@@ -1638,8 +1848,166 @@ AIR df4 - 1299 [air]
     name: "Toad",
     icon: "images/toadmini.png",
     moves: `
-      
-      `
+      :: Normals::
+1 - 1200 []
+11 - 2370 []
+13 - 2280 []
+132 - 3320 [popup]
+1322 - 4230 []
+13221 - 4950 []
+132211 - 5700 []
+133 - 3320 []
+1331 - 4160 []
+13311 - 4880 []
+134 - 3555 []
+1343 - 4335 []
+13433 - 5185 [frog stance]
+1344 - 4275 []
+13441 - 4875 []
+134411 - 5475 []
+13442 - 5525 []
+13443 - 5475 []
+13444 - 5375 []
+14 - 2645 []
+143 - 3555 []
+1433 - 4575 [frog stance]
+144 - 3485 []
+1441 - 4205 []
+1442 - 4985 []
+1443 - 4605 []
+1444 - 4805 []
+f1 - 1200 []
+f11 - 2370 [stun]
+f112 - 3330 []
+f1122 - 4870 []
+f1123 - 4240 []
+f11231 - 4960 []
+
+2 - 1300 []
+21 - 2380 []
+211 - 3420 [stun]
+2112 - 4260 []
+21122 - 5580 []
+212 - 3420 [popup]
+2121 - 4260 []
+21211 - 5160 []
+22 - 2470 [popup]
+222 - 3510 [popup]
+2221 - 4350 []
+22211 - 5250 []
+24 - 2745 []
+243 - 3655 []
+2433 - 4675 [frog stance]
+244 - 3585 []
+2441 - 4305 []
+24411 - 5055 []
+2442 - 4905 []
+2443 - 5025 []
+2444 - 4905 []
+f2 - 1300 [popup]
+f22 - 2470 [popup]
+f221 - 3430 []
+f2211 - 4480 []
+wr2 - 2800 [side switch]
+
+3 - 1200 []
+32 - 2370 [popup]
+322 - 3410 []
+3221 - 4250 []
+32211 - 5150 []
+33 - 2370 []
+331 - 3330 []
+3311 - 4170 []
+3313 - 4240 []
+33134 - 5320 []
+331343 - 6020 [frog stance]
+343 - 3555 []
+3433 - 4575 [frog stance]
+344 - 3485 []
+3441 - 4205 []
+34411 - 4955 []
+3442 - 4985 []
+3443 - 4925 []
+3444 - 4805 []
+f3 - 1300 []
+f31 - 2380 []
+f311 - 3340 []
+f313 - 3420 []
+f3134 - 4680 []
+f31343 - 5520 [frog stance]
+b3 - 1800 [Note: hold forward for glitch]
+b33 - 3060 [frog stance]
+
+4 - 1615 []
+43 - 2655 []
+433 - 3845 [frog stance]
+44 - 2575 []
+441 - 3415 [popup]
+4411 - 4315 []
+442 - 4325 []
+443 - 4255 []
+444 - 4115 []
+f4 - 1400 []
+f42 - 2570 [popup]
+f421 - 3530 []
+f4211 - 4580 []
+f44 - 2570 []
+f444 - 3930 []
+b4 - 1600 [airseek]
+
+::FROG STANCE::
+3+4 - [frog stance]
+1 - 1200 [frog stance]
+11 - 2280 [popup, frog stance]
+14 - 1200 [not a true combo, normal stance]
+111 - 3640 [frog stance]
+112 - 2280 [last hit doesn't connect, frog stance]
+113 - 2280 [last hit doesn't connect, frog stance]
+114 - 2280 [last hit doesn't connect, frog stance]
+12 - 2370 [frog stance]
+121 - 3730 [frog stance]
+122 - 3570 [side switch, normal stance]
+123 - 4130 [popup, normal stance]
+124 - 4290 [frog stance]
+2 - 1500 [popup, frog stance]
+3 - 1300 [frog stance]
+32 - 1300 [not a true combo, side switch]
+33 - 1300 [not a true combo, normal stance]
+333 - 1300 [not a true combo, normal stance]
+334 - 1300 [not a true combo, normal stance]
+1+2 - 2800 [popup, side switch, normal stance]
+3+4 - [normal stance]
+
+::SPECIALS::
+df1 - 2900 []
+df2 - 2200 [stun]
+df3 - 1200 [chain]
+> 1 - 2280 [chained]
+> 11 - 3480 [chained]
+> 2 - 3450 [chained]
+> 3 - 3360 [chained]
+> 4 - 3180 [chained]
+df4 - 2435 []
+db1 - 3061 []
+db3 - [chain]
+> 1 - 1300 [airseek, chained]
+> 2 - 2500 [chained]
+> 3 - 2400 [chained]
+> 4 - 2419 [chained]
+bb4 - 2470 []
+bb42 - 3830 [airseek]
+ff2 - 1500 []
+ff4 - 2119 []
+ff43 - 2959 []
+ff431 - 3679 []
+ff4311 - 4429 []
+ff432 - 4459 []
+ff433 - 4399 []
+ff434 - 4279 []
+      `,
+      combos: `
+        211, 22, f11, 322, ff434, 1+2 - 12953 []
+        `
   },
 
   wolverine: {
